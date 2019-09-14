@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="keywords" content="我爱你，伏曦">
+  <link rel="shortcut icon" href="https://zhangge.net/love/img/favicon.ico">
+  <link rel="bookmark" href="https://zhangge.net/love/img/favicon.ico" type="image/x-icon">
+  <title>伏曦</title>
+  <link type="text/css" rel="stylesheet" href="default.css">
+  <script src="hm.js"></script>
+  <script type="text/javascript" src="jquery.min.js"></script>
+  <script type="text/javascript" src="jscex.min.js"></script>
+  <script type="text/javascript" src="jscex-parser.js"></script>
+  <script type="text/javascript" src="jscex-jit.js"></script>
+  <script type="text/javascript" src="jscex-builderbase.min.js"></script>
+  <script type="text/javascript" src="jscex-async.min.js"></script>
+  <script type="text/javascript" src="jscex-async-powerpack.min.js"></script>
+  <script type="text/javascript" src="functions.js" charset="utf-8"></script>
+  <script type="text/javascript" src="love.js" charset="utf-8"></script>
+
+</head>
+  <body>
+    <audio id="audio" src="/4Real.mp3" type="audio/mp3" preload autoplay loop controls></audio>
+    <div id="main">
+      <div id="error">本页面采用HTML5编辑，目前您的浏览器无法显示。</div>
+      <div id="wrap">
+        <div id="text">
+          <div id="code">
+            <span class="say">或许是缘分，或许是注定，谁都不曾想到我们会在彭水，在美丽的阿依河相遇。</span><br>
+            <span class="say"></span><br>
+            <span class="say">自从有了你，山川沉默，海面静谧，云海不再翻涌，江潮不再澎湃，花鸟鱼虫被光与尘凝固，世界万籁俱寂，只剩下你。</span><br>
+            <span class="say"></span><br>
+            <span class="say">自此，你便是3，我便是9，我除了你还是你。情不知所起，而一往情深。我不知道我有多喜欢你，但如果去见你，我一定用跑的。</span><br>
+            <span class="say"></span><br>
+            <span class="say">于是让傻乎乎的你每天脸上浮现出灿烂的笑容便成为了我毕生的追求与使命。</span><br>
+            <span class="say"></span><br>
+            <span class="say">希望你每天都能这般开心，我会一直陪着你。</span><br>
+            <span class="say"></span><br>
+            <span class="say">You are my destiny</span><br>
+            <span class="say"></span><br>
+            <span class="say">I’ll be with you forever</span><br>
+          </div>
+        </div>
+        <div id="clock-box">
+          我<span class="STYLE1" style="color: #F56C6C;"> ❤ </span>你<span class="STYLE1"> 已经相恋了：</span>
+          <div id="clock"></div>
+        </div>
+        <canvas id="canvas" width="1100" height="680"></canvas>
+        </div>
+    </div>
+
+    <script>
+      var audio = document.getElementById('audio');
+
+      (function(){
+          $('html').one('click touchstart',function(){
+              audio.play();
+          });
+
+          var canvas = $('#canvas');
+
+          if (!canvas[0].getContext) {
+              $("#error").show();
+              return false;
+          }
+
+          var width = canvas.width();
+          var height = canvas.height();
+
+          canvas.attr("width", width);
+          canvas.attr("height", height);
+
+          var opts = {
+              seed: {
+                  x: width / 2 - 20,
+                  color: "rgb(190, 26, 37)",
+                  scale: 2
+              },
+              branch: [
+                  [535, 680, 570, 250, 500, 200, 30, 100, [
+                      [540, 500, 455, 417, 340, 400, 13, 100, [
+                          [450, 435, 434, 430, 394, 395, 2, 40]
+                      ]],
+                      [550, 445, 600, 356, 680, 345, 12, 100, [
+                          [578, 400, 648, 409, 661, 426, 3, 80]
+                      ]],
+                      [539, 281, 537, 248, 534, 217, 3, 40],
+                      [546, 397, 413, 247, 328, 244, 9, 80, [
+                          [427, 286, 383, 253, 371, 205, 2, 40],
+                          [498, 345, 435, 315, 395, 330, 4, 60]
+                      ]],
+                      [546, 357, 608, 252, 678, 221, 6, 100, [
+                          [590, 293, 646, 277, 648, 271, 2, 80]
+                      ]]
+                  ]]
+              ],
+              bloom: {
+                  num: 700,
+                  width: 1080,
+                  height: 650,
+              },
+              footer: {
+                  width: 1200,
+                  height: 5,
+                  speed: 10,
+              }
+          }
+
+          var tree = new Tree(canvas[0], width, height, opts);
+          var seed = tree.seed;
+          var foot = tree.footer;
+          var hold = 1;
+
+          canvas.click(function(e) {
+              var offset = canvas.offset(), x, y;
+              x = e.pageX - offset.left;
+              y = e.pageY - offset.top;
+              if (seed.hover(x, y)) {
+                  hold = 0;
+                  canvas.unbind("click");
+                  canvas.unbind("mousemove");
+                  canvas.removeClass('hand');
+              }
+          }).mousemove(function(e){
+              var offset = canvas.offset(), x, y;
+              x = e.pageX - offset.left;
+              y = e.pageY - offset.top;
+              canvas.toggleClass('hand', seed.hover(x, y));
+          });
+
+          var seedAnimate = eval(Jscex.compile("async", function () {
+              seed.draw();
+              while (hold) {
+                  $await(Jscex.Async.sleep(10));
+              }
+              while (seed.canScale()) {
+                  seed.scale(0.95);
+                  $await(Jscex.Async.sleep(10));
+              }
+              while (seed.canMove()) {
+                  seed.move(0, 2);
+                  foot.draw();
+                  $await(Jscex.Async.sleep(10));
+              }
+          }));
+
+          var growAnimate = eval(Jscex.compile("async", function () {
+              do {
+                tree.grow();
+                  $await(Jscex.Async.sleep(10));
+              } while (tree.canGrow());
+          }));
+
+          var flowAnimate = eval(Jscex.compile("async", function () {
+              do {
+                tree.flower(2);
+                  $await(Jscex.Async.sleep(10));
+              } while (tree.canFlower());
+          }));
+
+          var moveAnimate = eval(Jscex.compile("async", function () {
+              tree.snapshot("p1", 240, 0, 610, 680);
+              while (tree.move("p1", 500, 0)) {
+                  foot.draw();
+                  $await(Jscex.Async.sleep(10));
+              }
+              foot.draw();
+              tree.snapshot("p2", 500, 0, 610, 680);
+
+              // 会有闪烁不得意这样做, (＞﹏＜)
+              canvas.parent().css("background", "url(" + tree.toDataURL('image/png') + ")");
+              canvas.css("background", "#F2F6FC");
+              $await(Jscex.Async.sleep(300));
+              canvas.css("background", "none");
+          }));
+
+          var jumpAnimate = eval(Jscex.compile("async", function () {
+              var ctx = tree.ctx;
+              while (true) {
+                  tree.ctx.clearRect(0, 0, width, height);
+                  tree.jump();
+                  foot.draw();
+                  $await(Jscex.Async.sleep(25));
+              }
+          }));
+
+          var textAnimate = eval(Jscex.compile("async", function () {
+          var together = new Date();
+          together.setFullYear(2018, 03, 25);       //时间年月日(month 介于 0 ~ 11 之间)
+          together.setHours(19);            //小时
+          together.setMinutes(30);          //分钟
+          together.setSeconds(3);          //秒前一位
+          together.setMilliseconds(0);        //秒第二位
+
+          $("#code").show().typewriter();
+              $("#clock-box").fadeIn(500);
+              while (true) {
+                  timeElapse(together);
+                  $await(Jscex.Async.sleep(1000));
+              }
+          }));
+
+          var runAsync = eval(Jscex.compile("async", function () {
+              $await(seedAnimate());
+              $await(growAnimate());
+              $await(flowAnimate());
+              $await(moveAnimate());
+
+              textAnimate().start();
+
+              $await(jumpAnimate());
+          }));
+
+          runAsync().start();
+      })();
+    </script>
+  </body>
+</html>
